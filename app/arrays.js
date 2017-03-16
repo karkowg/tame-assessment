@@ -61,10 +61,11 @@ exports.arraysAnswers = {
 
   duplicates: function(arr) {
     arr.sort();
+    let self = this;
     return arr.filter(function(current, index, origArr) {
       if (index == 0) return true;
       return current != origArr[index - 1]
-        && exports.arraysAnswers.count(origArr, current) > 1;
+        && self.count(origArr, current) > 1;
     });
   },
 

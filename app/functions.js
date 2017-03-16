@@ -10,15 +10,13 @@ exports.functionsAnswers = {
   },
 
   functionFunction: function(str) {
-    return function(name) {
-      return str + ', ' + name;
-    };
+    return (name) => str + ', ' + name;
   },
 
   makeClosures: function(arr, fn) {
-    return function(index) {
-      return fn(arr[index]);
-    };
+    let funcs = [];
+    arr.forEach((current) => funcs.push(() => fn(current)));
+    return funcs;
   },
 
   partial: function(fn, str1, str2) {
@@ -29,27 +27,31 @@ exports.functionsAnswers = {
 
   useArguments: function() {
     let sum = 0;
-    for (let i=0; i < arguments.length; i++) {
-      sum += arguments[i];
-    }
+    _.each(arguments, (arg) => sum += arg);
     return sum;
   },
 
   callIt: function(fn) {
     let args = [];
-    for (let i=1; i < arguments.length; i++) {
-      args.push(arguments[i]);
-    }
+    _.each(arguments, (arg, k) => {
+      if (k > 0) args.push(arg);
+    });
     return fn.apply(this, args);
   },
 
   partialUsingArguments: function(fn) {
-    return function(args) {
-      return fn.apply(this, args);
+    let selfArgs = [];
+    _.each(arguments, (arg, k) => {
+      if (k > 0) selfArgs.push(arg);
+    });
+    return () => {
+      let args = [];
+      _.each(arguments, (arg) => selfArgs.push(arg));
+      return fn.apply(this, selfArgs.concat(args));
     };
   },
 
   curryIt: function(fn) {
-
+    return (a) => (b) => (c) => fn(a, b, c);
   }
 };
